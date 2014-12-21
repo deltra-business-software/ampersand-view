@@ -295,7 +295,14 @@ _.extend(View.prototype, {
         if (_.isString(newDom)) newDom = domify(newDom);
         var parent = this.el && this.el.parentNode;
         if (parent) parent.replaceChild(newDom, this.el);
-        if (newDom.nodeName === '#document-fragment') throw new Error('Views can only have one root element.');
+        if (newDom.nodeName === '#document-fragment') {
+            var nodes = Array.prototype.slice.call(newDom);
+            var filteredNodes = nodes.filter(function (node) {
+                return node.nodeType !== 8; // COMMENT_NODE
+            });
+            if (filteredNodes.length > 1) throw new Error('Views can only have one root element.');
+            newDom = filteredNodes[0];
+        }
         this.el = newDom;
         return this;
     },

@@ -296,6 +296,15 @@ test('throw on multiple root elements', function (t) {
     t.end();
 });
 
+test('don\'t throw if template contains comment node for root element', function (t) {
+    var View = AmpersandView.extend({
+        template: '<li></li><!-- list-item -->'
+    });
+    var view = new View();
+    t.ok(view.renderWithTemplate()); //Should not throw error
+    t.end();
+});
+
 test('queryAll should return an array', function (t) {
     var View = AmpersandView.extend({
         autoRender: true,
